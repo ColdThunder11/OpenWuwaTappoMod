@@ -16,7 +16,7 @@
 
 ## 使用
 
-从[Release](https://github.com/ColdThunder11/OpenWuwaTappoMod/releases/latest)页面下载程序，运行后点击进行补丁即可  
+从[Release](https://github.com/ColdThunder11/OpenWuwaTappoMod/releases/latest)页面下载程序，运行后点击进行补丁即可。打开桌宠程序的设置页面可以看到相关功能的开关和说明  
 
 ### 从源码运行（uv）
 

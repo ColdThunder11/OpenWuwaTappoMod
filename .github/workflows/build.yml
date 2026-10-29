@@ -37,7 +37,6 @@ jobs:
           name: WuwaTappoMod-windows
           path: |
             dist/WuwaTappoMod.exe
-            LICENSE
           if-no-files-found: error
 
       - name: Release (tags only)
@@ -46,4 +45,3 @@ jobs:
         with:
           files: |
             dist/WuwaTappoMod.exe
-            LICENSE
