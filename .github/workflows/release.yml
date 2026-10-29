@@ -35,6 +35,10 @@ jobs:
       - name: Build with PyInstaller
         run: uv run pyinstaller --noconfirm wuwa_tappo_mod.spec
 
+      - name: Verify build output
+        shell: bash
+        run: test -f dist/WuwaTappoMod.exe
+
       - name: Resolve release tag
         id: tag
         shell: bash
@@ -50,6 +54,8 @@ jobs:
         with:
           tag_name: ${{ steps.tag.outputs.tag }}
           name: WuwaTappoMod ${{ steps.tag.outputs.tag }}
-          files: dist/WuwaTappoMod.exe
+          files: |
+            dist/WuwaTappoMod.exe
+            LICENSE
           prerelease: ${{ github.event.inputs.prerelease }}
           generate_release_notes: true

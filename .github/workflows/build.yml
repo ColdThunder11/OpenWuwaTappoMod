@@ -27,15 +27,23 @@ jobs:
       - name: Build with PyInstaller
         run: uv run pyinstaller --noconfirm wuwa_tappo_mod.spec
 
+      - name: Verify build output
+        shell: bash
+        run: test -f dist/WuwaTappoMod.exe
+
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: WuwaTappoMod-windows
-          path: dist/WuwaTappoMod.exe
+          path: |
+            dist/WuwaTappoMod.exe
+            LICENSE
           if-no-files-found: error
 
       - name: Release (tags only)
         if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v2
         with:
-          files: dist/WuwaTappoMod.exe
+          files: |
+            dist/WuwaTappoMod.exe
+            LICENSE

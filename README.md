@@ -16,6 +16,8 @@
 
 ## 使用
 
+从[Release](https://github.com/ColdThunder11/OpenWuwaTappoMod/releases/latest)页面下载程序，运行后点击进行补丁即可  
+
 ### 从源码运行（uv）
 
 ```bash

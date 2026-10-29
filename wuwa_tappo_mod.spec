@@ -21,7 +21,7 @@ exe = EXE(
     a.scripts,
     a.binaries,
     a.datas,
-    name='OpenWuwaTappoMod',
+    name='WuwaTappoMod',
     debug=False,
     strip=False,
     upx=False,
