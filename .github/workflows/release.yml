@@ -1,0 +1,55 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release 版本号 (如 v1.0.0)；留空则自动使用日期标签'
+        required: false
+        default: ''
+      prerelease:
+        description: '标记为预发布'
+        type: boolean
+        required: false
+        default: false
+
+permissions:
+  contents: write
+
+jobs:
+  release-windows:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          python-version: '3.12'
+          enable-cache: true
+
+      - name: Install dependencies
+        run: uv sync --locked
+
+      - name: Build with PyInstaller
+        run: uv run pyinstaller --noconfirm wuwa_tappo_mod.spec
+
+      - name: Resolve release tag
+        id: tag
+        shell: bash
+        run: |
+          if [ -n "${{ github.event.inputs.version }}" ]; then
+            echo "tag=${{ github.event.inputs.version }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "tag=v$(date +'%Y%m%d-%H%M')" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Upload release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.tag.outputs.tag }}
+          name: WuwaTappoMod ${{ steps.tag.outputs.tag }}
+          files: dist/WuwaTappoMod.exe
+          prerelease: ${{ github.event.inputs.prerelease }}
+          generate_release_notes: true
