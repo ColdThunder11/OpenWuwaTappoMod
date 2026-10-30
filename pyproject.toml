@@ -1,6 +1,6 @@
 [project]
 name = "open-wuwa-tappo-mod"
-version = "1.0.0"
+version = "1.0.1"
 description = "OpenWuwaTappoMod - Wuwa Tappo desktop-pet overlay patcher with a Tkinter GUI"
 readme = "README.md"
 requires-python = ">=3.10"

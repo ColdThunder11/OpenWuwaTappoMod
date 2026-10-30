@@ -27,4 +27,5 @@ exe = EXE(
     upx=False,
     console=False,          # 窗口程序, 无控制台
     disable_windowed_traceback=False,
+    version='version_info.txt',
 )

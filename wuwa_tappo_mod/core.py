@@ -23,9 +23,7 @@ overlay 方案: PE 追加 .ovl 节区(任意大小新 brotli 流) + 重指 phf �
   drag          任意拖动(多屏并集钳制 + 拖拽触边自动迁移显示器)
   room_drag_top 联机模式下拖动桌宠置顶
   hidenames     隐藏联机好友昵称 / hidecount 隐藏点击数与底栏
-  block_fkeys   屏蔽 F1~F12 快捷键
   dblmirror     双击自己或联机成员桌宠垂直镜像
-  netdebug      网络调试日志(脱敏)
 """
 import brotli
 import ctypes
@@ -37,11 +35,10 @@ import winreg
 
 # ---------------- 补丁定义(与 case 验证过的变换一致) ----------------
 
-PET_KEY = b"/assets/index-CAndEweT.js"
-PANEL_KEY = b"/assets/index-DH_DNc-i.js"
-SW_KEY = b"/assets/switchDisplayMonitor-CH1c_9nU.js"
-MAIN_KEY = b"/assets/index-DsnG26DH.js"
-PATCH_KEYS = (PET_KEY, PANEL_KEY, SW_KEY, MAIN_KEY)
+PET_KEY = b"/assets/index-pp8VWaUF.js"
+PANEL_KEY = b"/assets/index-CiT_jZa7.js"
+SW_KEY = b"/assets/switchDisplayMonitor-B50jXMGD.js"
+PATCH_KEYS = (PET_KEY, PANEL_KEY, SW_KEY)
 
 # --- chunk2: 隐藏他人名称 (hidenames) ---
 # 用 CSS 隐藏完整容器，保留桌宠外层的右键处理。
@@ -62,53 +59,20 @@ VISIBILITY_IIFE = (
 )
 # --- chunk2/4/5: 屏蔽 F1–F12 快捷键 (默认关) ---
 # 原生键盘与 DOM 键盘共用 Bc/Nc，其他窗口的 F8 则走独立切屏判定。
-BLOCK_FKEY_HELPER = (
-    ';(function(){'
-    'window.__wtmodBlockFKey=function(key){try{return typeof key==="string"'
-    '&&/^F(?:[1-9]|1[0-2])$/i.test(key)'
-    '&&localStorage.getItem("wtmod_block_fkeys")==="1"}catch(e){return!1}};'
-    'function prevent(e){if(window.__wtmodBlockFKey(e.key))e.preventDefault()}'
-    'window.addEventListener("keydown",prevent,!0);'
-    'window.addEventListener("keyup",prevent,!0)'
-    '})();'
-)
-BLOCK_FKEY_PET_ANCHORS = (
-    ('function Bc(e){',
-     'function Bc(e){if(window.__wtmodBlockFKey(e)){Nc(e);return}'),
-    ('function Nc(e){',
-     'function Nc(e){if(window.__wtmodBlockFKey(e)){'
-     'const t=qr.delete(e),o=ma.delete(e);(t||o)&&ql();return}'),
-    ('function Fc(e){',
-     'function Fc(e){if(window.__wtmodBlockFKey(e.key)){e.preventDefault();return}'),
-    ('function Lc(e){',
-     'function Lc(e){if(window.__wtmodBlockFKey(e.key)){Nc(e.key);return}'),
-    ('const qr=new Set,ma=new Set;',
-     'const qr=new Set,ma=new Set;'
-     'function _wtmFKeySync(){for(const key of qr)if(window.__wtmodBlockFKey(key))Nc(key)}'
-     'window.addEventListener("storage",_wtmFKeySync);'
-     'window.addEventListener("wtmod-block-fkeys-change",_wtmFKeySync);'
-     'const _wtmFKeyTimer=setInterval(_wtmFKeySync,500);'
-     'Ri(()=>{clearInterval(_wtmFKeyTimer);'
-     'window.removeEventListener("storage",_wtmFKeySync);'
-     'window.removeEventListener("wtmod-block-fkeys-change",_wtmFKeySync)});'),
-)
-BLOCK_FKEY_SW_ORIG = 'function Dt(t){return Mt.has(t)}'
-BLOCK_FKEY_SW_NEW = 'function Dt(t){return !window.__wtmodBlockFKey(t)&&Mt.has(t)}'
-
 # --- chunk2: 双击镜像角色 (dblmirror, 默认关) ---
 # Windows 透明窗口通过原生 mouse-button/mouse-move 路由输入，不会生成 DOM dblclick。
 # 在原版命中测试后记录按下，释放时识别双击；移动超过阈值即取消，保留原版拖动。
 DBL_MIRROR_NATIVE_ANCHORS = (
-    ('if(f){const _e=fe.value.find($e=>$e.id===f&&Zt($e)),Ne=',
+    ('if(f){const _e=de.value.find(Je=>Je.id===f&&tn(Je)),Ne=',
      'try{window.__wtmodMirror.begin(M.x,M.y,f)}catch(_e){};'
-     'if(f){const _e=fe.value.find($e=>$e.id===f&&Zt($e)),Ne='),
-    ('const b=Vt(o,l);if(b){if(t==="release"&&e==="left"&&$o)',
-    'const b=Vt(o,l);try{if(t==="release"&&e==="left")'
-     'window.__wtmodMirror.end(b&&b.x,b&&b.y,Tt.value!==null?'
-     'Math.abs(Ln)>.5||Math.abs(Bn)>.5:Lo.value&&Vl.value)}catch(_e){};'
+     'if(f){const _e=de.value.find(Je=>Je.id===f&&tn(Je)),Ne='),
+    ('const b=Wt(o,l);if(b){if(t==="release"&&e==="left"&&$o)',
+    'const b=Wt(o,l);try{if(t==="release"&&e==="left")'
+     'window.__wtmodMirror.end(b&&b.x,b&&b.y,Pt.value!==null?'
+     'Math.abs(Ln)>.5||Math.abs(Bn)>.5:Lo.value&&Yl.value)}catch(_e){};'
      'if(b){if(t==="release"&&e==="left"&&$o)'),
-    ('Cl=await pt("mouse-move",e=>{',
-     'Cl=await pt("mouse-move",e=>{try{const _m=Vt(e.payload.x,e.payload.y);'
+    ('Rl=await tt("mouse-move",e=>{',
+     'Rl=await tt("mouse-move",e=>{try{const _m=Wt(e.payload.x,e.payload.y);'
      'if(_m)window.__wtmodMirror.move(_m.x,_m.y)}catch(_e){};'),
 )
 DBL_MIRROR_IIFE = (
@@ -160,13 +124,13 @@ DBL_MIRROR_IIFE = (
 # --- chunk2/4: 拖动相关 (跨显示器) ---
 # 1.0.2 重命名: hd→Ed, Jt→Qt, aa→wa, Ne→Oe(watch), Oe→De(nextTick), vi→Ri(dispose),
 # Lo→Vo(currentRoomId), Fo→Uo(roomMode), Pt→Tt(拖拽成员id), wo→So(钳制), St→At(缩放)
-ROOM_DRAG_Z_OLD = ('function Ed(e,t){const o=Qt(e),l=wa(),f=l?t<l.firstRowColumns?0:'
+ROOM_DRAG_Z_OLD = ('function Dd(e,t){const o=en(e),l=ba(),f=l?t<l.firstRowColumns?0:'
                    '1+Math.floor((t-l.firstRowColumns)/l.columns):0,b={left:`${o.left}px`,'
-                   'top:`${o.top}px`,zIndex:String(l?1e3-f:t+1),visibility:lt.has(e.id)?"visible":"hidden"')
+                   'top:`${o.top}px`,zIndex:String(l?1e3-f:t+1),visibility:ut.has(e.id)?"visible":"hidden"')
 ROOM_DRAG_Z_NEW = ROOM_DRAG_Z_OLD.replace(
     'zIndex:String(l?1e3-f:t+1)',
     'zIndex:String(_wtmRoomZ(e.id,l?1e3-f:t+1))')
-ROOM_DRAG_STATE_OLD = 'Oe(lh,()=>{if(Tt.value!==null){Ui=!0;return}Ac(),Fn()})'
+ROOM_DRAG_STATE_OLD = 'Oe(dh,()=>{if(Pt.value!==null){qi=!0;return}Mc(),Dn()})'
 ROOM_DRAG_STATE_NEW = (
     'const _wtmRoomTop=W([]),_wtmRoomTopEnabled=W(!1);'
     'function _wtmRoomZ(id,fallback){if(!_wtmRoomTopEnabled.value)return fallback;'
@@ -179,13 +143,13 @@ ROOM_DRAG_STATE_NEW = (
     'window.addEventListener("storage",_wtmRoomTopStorage);'
     'window.addEventListener("wtmod-room-drag-top-change",_wtmRoomTopSync);'
     'const _wtmRoomTopTimer=setInterval(_wtmRoomTopSync,500);'
-    'Ri(()=>{clearInterval(_wtmRoomTopTimer);window.removeEventListener("storage",_wtmRoomTopStorage);'
+    'Ai(()=>{clearInterval(_wtmRoomTopTimer);window.removeEventListener("storage",_wtmRoomTopStorage);'
     'window.removeEventListener("wtmod-room-drag-top-change",_wtmRoomTopSync)});'
-    'Oe(Tt,e=>{if(e!==null&&_wtmRoomTopEnabled.value&&Vo.value&&Uo.value!=="idle"'
-    '&&dt.value.some(t=>t.id===e))_wtmRoomTop.value=[..._wtmRoomTop.value.filter(t=>t!==e),e]},{flush:"sync"});'
+    'Oe(Pt,e=>{if(e!==null&&_wtmRoomTopEnabled.value&&Vo.value&&Uo.value!=="idle"'
+    '&&ht.value.some(t=>t.id===e))_wtmRoomTop.value=[..._wtmRoomTop.value.filter(t=>t!==e),e]},{flush:"sync"});'
     'Oe([Vo,Uo],()=>{_wtmRoomTop.value=[]},{flush:"sync"});'
-    'Oe(()=>fe.value.map(e=>[e.id,e.online?1:0].join(":")).join("|"),()=>{'
-    'const ids=new Set(fe.value.filter(e=>e.online).map(e=>e.id));'
+    'Oe(()=>de.value.map(e=>[e.id,e.online?1:0].join(":")).join("|"),()=>{'
+    'const ids=new Set(de.value.filter(e=>e.online).map(e=>e.id));'
     '_wtmRoomTop.value=_wtmRoomTop.value.filter(e=>ids.has(e))},{flush:"sync"});'
     + ROOM_DRAG_STATE_OLD
 )
@@ -199,15 +163,15 @@ DRAG_LET_NEW = ('let Y=null,ae=0,_wtmEdge=0,_wtmBusy=!1,_wtmX=0,_wtmY=0;'
                 'window.__TAURI_INTERNALS__.invoke("write_app_log",'
                 '{level:"warn",message:"[WTM] display migration failed or skipped"})'
                 ').catch(function(){})}catch(e){}}')
-DRAG_BEGIN_OLD = 'G=!1,O=J,K=ve,Fe=C.value,X=D.value,p?.(),y()'
-DRAG_BEGIN_NEW = 'G=!1,O=J,K=ve,Fe=C.value,X=D.value,_wtmEdge=0,_wtmX=J,_wtmY=ve,p?.(),y()'
-DRAG_MOVE_OLD = 'function Ue(J,ve){if(!N.value||P?.())return;const Je=J-O,We=ve-K;'
+DRAG_BEGIN_OLD = 'G=!1,O=J,K=ve,De=C.value,X=F.value,p?.(),y()'
+DRAG_BEGIN_NEW = 'G=!1,O=J,K=ve,De=C.value,X=F.value,_wtmEdge=0,_wtmX=J,_wtmY=ve,p?.(),y()'
+DRAG_MOVE_OLD = 'function Ue(J,ve){if(!N.value||P?.())return;const Qe=J-O,We=ve-K;'
 DRAG_MOVE_NEW = (DRAG_MOVE_OLD + 'const _dx=J-_wtmX,_dy=ve-_wtmY;_wtmX=J;_wtmY=ve;')
-QE_MOVE_OLD = ('const ot=Fe+Je,ft=X+We,Te=So(ot,ft,At(),window.innerWidth,window.innerHeight);'
-               'C.value=Te.left,D.value=Te.top,g?.(Te.left-Fe,Te.top-X)')
+QE_MOVE_OLD = ('const ot=De+Qe,pt=X+We,Te=So(ot,pt,St(),window.innerWidth,window.innerHeight);'
+               'C.value=Te.left,F.value=Te.top,g?.(Te.left-De,Te.top-X)')
 QE_MOVE_NEW = (QE_MOVE_OLD + ';try{'
                'if(localStorage.getItem("wtmod_drag")==="1"){'
-               'const _scale=At(),_lo=So(-Infinity,-Infinity,_scale,window.innerWidth,window.innerHeight),'
+               'const _scale=St(),_lo=So(-Infinity,-Infinity,_scale,window.innerWidth,window.innerHeight),'
                '_hi=So(Infinity,Infinity,_scale,window.innerWidth,window.innerHeight);'
                'let _at=0,_out=0;'
                'if(Te.left<=_lo.left){_at|=1;if(_dx<0)_out|=1}'
@@ -222,33 +186,30 @@ QE_MOVE_NEW = (QE_MOVE_OLD + ';try{'
                'catch(e){_wtmBusy=!1;_wtmDragFail()}}'
                '}else _wtmEdge=0'
                '}catch(e){_wtmDragFail()}')
-OT_OLD = ("const t=A(),e=await $();if(!e)return!1;"
-          "const n=await t.scaleFactor(),i=await t.outerPosition(),a=await t.innerSize(),"
-          "o=e.scaleFactor,c=e.position.x/o,r=e.position.y/o,"
-          "u=e.size.width/o,w=e.size.height/o,M=a.width/n,m=a.height/n;"
-          "let s=i.x/n,p=i.y/n;"
-          "const _=c+Math.max(0,u-M),I=r+Math.max(0,w-m-yt);"
-          "s=Math.min(Math.max(s,c),_),p=Math.min(Math.max(p,r),I);"
-          "const S=i.x/n,T=i.y/n;"
-          "return Math.abs(s-S)<.5&&Math.abs(p-T)<.5?!1:"
-          '(await t.setPosition(new K(s,p)),await f("sync_main_window_to_current_monitor"),k(s,p),!0)')
-# v2: 并集钳制 + 迁移瞬移抑制。迁移后 ca() 会以"宠物 Dock 逻辑位置(未迁移)"
-# 调用本函数, 若据此位移 >160 逻辑像素, 判定为跨屏吸附而非用户意图, 放弃本次钳制
-# (窗口留在迁移后的位置, 用户拖放点不丢)。
+OT_OLD = ("const e=x(),t=await fe();if(!t)return!1;"
+          "const a=await e.scaleFactor(),n=await e.outerPosition(),s=await e.innerSize(),"
+          "i=t.scaleFactor,l=t.position.x/i,r=t.position.y/i,"
+          "d=t.size.width/i,_=t.size.height/i,N=s.width/a,g=s.height/a;"
+          "let c=n.x/a,m=n.y/a;"
+          "const v=l+Math.max(0,d-N),M=r+Math.max(0,_-g-ya);"
+          "c=Math.min(Math.max(c,l),v),m=Math.min(Math.max(m,r),M);"
+          "const P=n.x/a,b=n.y/a;"
+          "return Math.abs(c-P)<.5&&Math.abs(m-b)<.5?!1:"
+          '(await e.setPosition(new pe(c,m)),await u("sync_main_window_to_current_monitor"),j(c,m),!0)')
 OT_NEW = ('if(localStorage.getItem("wtmod_drag")!=="1"){' + OT_OLD + '}'
-          "const t=A(),e=await j();if(!e||!e.length)return!1;"
-          "const n=await t.scaleFactor(),i=await t.outerPosition(),a=await t.innerSize(),"
-          "M=a.width/n,m=a.height/n;let c=1/0,r=1/0,_=-1/0,I=-1/0;"
-          "for(const E of e){const o=E.scaleFactor,L=E.position.x/o,"
-          "O=E.position.y/o,W=E.size.width/o,F=E.size.height/o;"
-          "c=Math.min(c,L);r=Math.min(r,O);_=Math.max(_,L+W);I=Math.max(I,O+F)}"
-          "_-=M;I-=m+yt;let s=i.x/n,p=i.y/n;const Sx=s,Sy=p;"
-          "s=Math.min(Math.max(s,c),_),p=Math.min(Math.max(p,r),I);"
-          "if(Math.abs(s-Sx)>160||Math.abs(p-Sy)>160){"
+          "const e=x(),t=await me();if(!t||!t.length)return!1;"
+          "const a=await e.scaleFactor(),n=await e.outerPosition(),s=await e.innerSize(),"
+          "N=s.width/a,g=s.height/a;let l=1/0,r=1/0,v=-1/0,M=-1/0;"
+          "for(const E of t){const i=E.scaleFactor,L=E.position.x/i,"
+          "O=E.position.y/i,W=E.size.width/i,F=E.size.height/i;"
+          "l=Math.min(l,L);r=Math.min(r,O);v=Math.max(v,L+W);M=Math.max(M,O+F)}"
+          "v-=N;M-=g+ya;let c=n.x/a,m=n.y/a;const Sx=c,Sy=m;"
+          "c=Math.min(Math.max(c,l),v),m=Math.min(Math.max(m,r),M);"
+          "if(Math.abs(c-Sx)>160||Math.abs(m-Sy)>160){"
           "console.log('[mod] skip post-switch snap clamp');return!1}"
-          "const S=i.x/n,T=i.y/n;"
-          "return Math.abs(s-S)<.5&&Math.abs(p-T)<.5?!1:"
-          '(await t.setPosition(new K(s,p)),await f("sync_main_window_to_current_monitor"),k(s,p),!0)')
+          "const P=n.x/a,b=n.y/a;"
+          "return Math.abs(c-P)<.5&&Math.abs(m-b)<.5?!1:"
+          '(await e.setPosition(new pe(c,m)),await u("sync_main_window_to_current_monitor"),j(c,m),!0)')
 
 # --- 设置页动态开关 (面板 chunk 末尾追加) ---
 # 独立配置字典: 每个开关 = {key, title, sub(说明文字), d(默认态"1"/"0"), feature}
@@ -264,8 +225,6 @@ MOD_SWITCHES = (
      "title": "(WTM)隐藏他人名称", "sub": "联机模式下不显示其他成员的名称框"},
     {"key": "wtmod_hidecount", "feature": "hidecount", "d": "0",
      "title": "(WTM)隐藏点击数和菜单", "sub": "不显示桌宠下方的点击数和菜单栏"},
-    {"key": "wtmod_block_fkeys", "feature": "block_fkeys", "d": "0",
-     "title": "(WTM)屏蔽F键快捷键", "sub": "屏蔽F1~F12，防止误触切换屏幕等全局快捷键"},
     {"key": "wtmod_dblmirror", "feature": "dblmirror", "d": "0",
      "title": "(WTM)双击镜像角色", "sub": "双击自己或联机成员的桌宠，垂直方向镜像显示"},
 )
@@ -282,7 +241,7 @@ MOD_PANEL_INJECT = (
     'cb.addEventListener("change",function(){'
     'try{localStorage.setItem(mod.k,cb.checked?"1":"0");'
     'if(mod.k==="wtmod_room_drag_top")window.dispatchEvent(new Event("wtmod-room-drag-top-change"));'
-    'if(mod.k==="wtmod_block_fkeys")window.dispatchEvent(new Event("wtmod-block-fkeys-change"))}catch(e){}})}'
+    '}catch(e){}})}'
     'function scan(){'
     'if(document.querySelector("[data-wtmod-row]"))return;'
     'var anchor=null;'
@@ -440,11 +399,11 @@ def find_install_dir():
 
 BACKUP_EXT = '.orig'
 
-SUPPORTED_VERSION = "1.0.2"   # 补丁锚点仅针对该主程序版本校准
+SUPPORTED_VERSION = "1.0.3"   # 补丁锚点仅针对该主程序版本校准
 
 
 def is_supported_version(exe_path):
-    """仅允许对 1.0.2 主程序打补丁"""
+    """仅允许对 1.0.3 主程序打补丁"""
     return _exe_version(exe_path) == SUPPORTED_VERSION
 
 
@@ -531,10 +490,6 @@ def build_assets(exe_path, log):
 
     js2, _ = pe.decompress_stream(PET_KEY)
     js2 = js2.decode('utf-8')
-    for old, new in BLOCK_FKEY_PET_ANCHORS:
-        assert js2.count(old) == 1, "F键屏蔽锚点异常: %r" % old[:60]
-        js2 = js2.replace(old, new, 1)
-    # 恒注入，运行时开关保留；所有拖拽锚点必须唯一匹配 1.0.2。
     for old, new in ((DRAG_LET_OLD, DRAG_LET_NEW),
                      (DRAG_BEGIN_OLD, DRAG_BEGIN_NEW),
                      (DRAG_MOVE_OLD, DRAG_MOVE_NEW),
@@ -549,39 +504,29 @@ def build_assets(exe_path, log):
     js2 = js2.rstrip('\n') + '\n'
     # 校验原版渲染锚点，样式隐藏完整容器，不触及右键入口。
     assert js2.count(HN_RS_ORIG) == 1, "昵称渲染锚点缺失"
-    assert js2.count('by={class:"cat-friend__nickname web-bold-font"}') == 1, "昵称容器锚点缺失"
-    assert js2.count('Dy={class:"pet-info-container"}') == 1, "底栏容器锚点缺失"
+    assert js2.count('Ry={class:"cat-friend__nickname web-bold-font"}') == 1, "昵称容器锚点缺失"
+    assert js2.count('qy={class:"pet-info-container"}') == 1, "底栏容器锚点缺失"
     # 恒注入: 原生鼠标输入不会派发 DOM 双击事件。
     for old, new in DBL_MIRROR_NATIVE_ANCHORS:
         assert js2.count(old) == 1, "双击镜像输入锚点异常: %r" % old[:60]
         js2 = js2.replace(old, new, 1)
     js2 = js2.rstrip('\n') + VISIBILITY_IIFE + DBL_MIRROR_IIFE + '\n'
     assets.append((PET_KEY, brotli.compress(js2.encode(), quality=11)))
-    log("[1/4] 主窗口 chunk (拖动/置顶/隐藏/F键/双击镜像 恒注入+设置页开关) OK")
+    log("[1/3] 主窗口 chunk (拖动/置顶/隐藏/双击镜像 恒注入+设置页开关) OK")
 
     js3, _ = pe.decompress_stream(PANEL_KEY)
     js3 = js3.decode('utf-8')
     js3 = js3.rstrip('\n') + MOD_PANEL_INJECT + '\n'
     assets.append((PANEL_KEY, brotli.compress(js3.encode(), quality=11)))
-    log("[2/4] 面板 chunk (设置页动态开关×%d) OK" % len(MOD_SWITCHES))
+    log("[2/3] 面板 chunk (设置页动态开关×%d) OK" % len(MOD_SWITCHES))
 
     js4, _ = pe.decompress_stream(SW_KEY)
     js4 = js4.decode('utf-8')
     assert js4.count(OT_OLD) == 1
     js4 = js4.replace(OT_OLD, OT_NEW)
-    assert js4.count(BLOCK_FKEY_SW_ORIG) == 1, "F8快捷键屏蔽锚点异常"
-    js4 = js4.replace(BLOCK_FKEY_SW_ORIG, BLOCK_FKEY_SW_NEW, 1)
     assets.append((SW_KEY, brotli.compress(js4.encode(), quality=11)))
-    log("[3/4] 多屏拖动限制 OK")
+    log("[3/3] 多屏拖动限制 OK")
 
-    # 恒注入: F键屏蔽助手 (全局 __wtmodBlockFKey, 供 SW/PET 钩子调用)
-    js5, _ = pe.decompress_stream(MAIN_KEY)
-    js5 = js5.decode('utf-8')
-    main_anchor = 'function setLocalStorage(e,t){window.localStorage.setItem(e,t)}class Request{'
-    assert js5.count(main_anchor) == 1, "F键助手锚点异常"
-    js5 = js5.replace(main_anchor, BLOCK_FKEY_HELPER + main_anchor, 1)
-    assets.append((MAIN_KEY, brotli.compress(js5.encode(), quality=11)))
-    log("[4/4] F键助手 OK")
     return pe, assets
 
 def run_patch(exe_path, out_path, log):
@@ -589,7 +534,7 @@ def run_patch(exe_path, out_path, log):
     if ver != SUPPORTED_VERSION:
         raise RuntimeError(
             "主程序版本为 %s，本工具仅支持 %s。"
-            "请先卸载/恢复官方 1.0.2 版本后再打补丁。"
+            "请先卸载/恢复官方 1.0.3 版本后再打补丁。"
             % (ver or "未知", SUPPORTED_VERSION))
     log("主程序版本校验通过: %s" % ver)
     in_place = os.path.abspath(exe_path) == os.path.abspath(out_path)

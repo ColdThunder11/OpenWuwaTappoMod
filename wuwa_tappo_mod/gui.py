@@ -116,7 +116,12 @@ def main():
 class App:
     def __init__(self):
         self.root = tk.Tk()
-        self.root.title("OpenWuwaTappo MOD")
+        try:
+            from importlib.metadata import version as _v
+            ver = _v('open-wuwa-tappo-mod')
+        except Exception:
+            ver = 'dev'
+        self.root.title("OpenWuwaTappo MOD v%s" % ver)
         self.root.geometry("720x520")
         self.src = tk.StringVar(value="")
         self.out = tk.StringVar(value="")
