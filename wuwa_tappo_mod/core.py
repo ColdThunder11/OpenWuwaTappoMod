@@ -122,8 +122,7 @@ DBL_MIRROR_IIFE = (
 )
 
 # --- chunk2/4: 拖动相关 (跨显示器) ---
-# 1.0.2 重命名: hd→Ed, Jt→Qt, aa→wa, Ne→Oe(watch), Oe→De(nextTick), vi→Ri(dispose),
-# Lo→Vo(currentRoomId), Fo→Uo(roomMode), Pt→Tt(拖拽成员id), wo→So(钳制), St→At(缩放)
+# 1.0.3: ht 是可渲染房间成员，Pt 是当前拖动成员，de 是完整成员列表。
 ROOM_DRAG_Z_OLD = ('function Dd(e,t){const o=en(e),l=ba(),f=l?t<l.firstRowColumns?0:'
                    '1+Math.floor((t-l.firstRowColumns)/l.columns):0,b={left:`${o.left}px`,'
                    'top:`${o.top}px`,zIndex:String(l?1e3-f:t+1),visibility:ut.has(e.id)?"visible":"hidden"')
@@ -135,7 +134,7 @@ ROOM_DRAG_STATE_NEW = (
     'const _wtmRoomTop=W([]),_wtmRoomTopEnabled=W(!1);'
     'function _wtmRoomZ(id,fallback){if(!_wtmRoomTopEnabled.value)return fallback;'
     'const rank=_wtmRoomTop.value.indexOf(id);'
-    'return rank<0?fallback:Math.max(1000,dt.value.length)+rank+1}'
+    'return rank<0?fallback:Math.max(1000,ht.value.length)+rank+1}'
     'function _wtmRoomTopSync(){let on=!1;try{on=localStorage.getItem("wtmod_room_drag_top")==="1"}catch(e){}'
     '_wtmRoomTopEnabled.value=on;if(!on&&_wtmRoomTop.value.length)_wtmRoomTop.value=[]}'
     'function _wtmRoomTopStorage(e){if(!e||e.key===null||e.key==="wtmod_room_drag_top")_wtmRoomTopSync()}'
@@ -155,8 +154,7 @@ ROOM_DRAG_STATE_NEW = (
 )
 # qe 的 wo 使用桌宠布局及缩放钳制候选位置，拖拽时不传安全区 inset。
 # 用同一 wo 求边界，并以相邻鼠标事件的位移判断是否朝外；离开对应边缘后重新武装。
-# uv 是官方的循环切屏函数，不按拖动方向选择相邻显示器。
-# (1.0.2: qe→Ue, wo→So, St→At, De→Fe, Y→G)
+# Tv 是 1.0.3 官方循环切屏函数，不按拖动方向选择相邻显示器。
 DRAG_LET_OLD = 'let Y=null,ae=0;'
 DRAG_LET_NEW = ('let Y=null,ae=0,_wtmEdge=0,_wtmBusy=!1,_wtmX=0,_wtmY=0;'
                 'function _wtmDragFail(){try{Promise.resolve('
@@ -181,7 +179,7 @@ QE_MOVE_NEW = (QE_MOVE_OLD + ';try{'
                '_wtmEdge&=_at;'
                'if((_out&~_wtmEdge)&&!_wtmBusy){'
                '_wtmEdge|=_out;_wtmBusy=!0;'
-               'try{Promise.resolve(uv()).then(function(ok){if(!ok)_wtmDragFail()},'
+               'try{Promise.resolve(Tv()).then(function(ok){if(!ok)_wtmDragFail()},'
                'function(){_wtmDragFail()}).finally(function(){_wtmBusy=!1})}'
                'catch(e){_wtmBusy=!1;_wtmDragFail()}}'
                '}else _wtmEdge=0'
